@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Big Data Lab | Joungyoun Kim</title>
+<style>
+  :root {
+    --navy:#0a1628; --deep:#0d1f3c; --accent:#00b4d8; --accent2:#0077b6;
+    --light:#caf0f8; --white:#f8fafc; --gray:#8a9ab5; --card:#111d35; --border:#1e2f50;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--navy);color:var(--white);}
+
+  /* NAV */
+  nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,22,40,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5%;}
+  .nav-logo{font-size:.95rem;font-weight:700;color:var(--accent);letter-spacing:1px;padding:18px 0;}
+  .nav-logo span{color:var(--white);}
+  nav ul{list-style:none;display:flex;gap:2rem;}
+  nav ul li a{color:var(--gray);text-decoration:none;font-size:.85rem;letter-spacing:.5px;text-transform:uppercase;font-weight:500;transition:color .2s;padding:22px 0;display:block;}
+  nav ul li a:hover,nav ul li a.active{color:var(--accent);}
+
+  /* HERO */
+  #home{min-height:100vh;display:flex;align-items:center;padding:100px 8% 60px;background:linear-gradient(135deg,var(--navy) 0%,#061022 50%,#091830 100%);position:relative;overflow:hidden;}
+  .hero-bg{position:absolute;inset:0;opacity:.07;background-image:radial-gradient(circle at 20% 50%,var(--accent) 0%,transparent 50%),radial-gradient(circle at 80% 20%,var(--accent2) 0%,transparent 40%);}
+  .dna-grid{position:absolute;right:0;top:0;width:50%;height:100%;opacity:.04;background-image:repeating-linear-gradient(0deg,var(--accent) 0px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,var(--accent) 0px,transparent 1px,transparent 40px);}
+  .hero-content{display:flex;align-items:center;gap:5%;max-width:1100px;position:relative;}
+  .hero-photo{flex-shrink:0;width:220px;height:270px;border-radius:16px;overflow:hidden;border:2px solid var(--accent2);box-shadow:0 0 40px rgba(0,180,216,.2);}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;object-position:top center;}
+  .hero-photo .photo-fallback{width:100%;height:100%;background:linear-gradient(135deg,#0077b6,#00b4d8);display:flex;align-items:center;justify-content:center;font-size:4rem;font-weight:800;color:rgba(255,255,255,.3);}
+  .hero-text h1{font-size:2.8rem;font-weight:800;line-height:1.1;margin-bottom:.5rem;}
+  .hero-text h1 span{color:var(--accent);}
+  .hero-tag{display:inline-block;background:rgba(0,180,216,.15);color:var(--accent);border:1px solid rgba(0,180,216,.3);border-radius:20px;padding:.3rem .9rem;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:1rem;}
+  .hero-text .position{color:var(--gray);font-size:1rem;margin-bottom:.3rem;}
+  .hero-text .dept{color:var(--light);font-size:.95rem;margin-bottom:1.5rem;}
+  .hero-bio{color:#b0bfd0;font-size:.92rem;line-height:1.7;max-width:540px;margin-bottom:1.5rem;}
+  .hero-contacts{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.5rem;}
+  .contact-chip{display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:.4rem .8rem;font-size:.8rem;color:var(--gray);}
+  .contact-chip svg{width:14px;height:14px;fill:var(--accent);flex-shrink:0;}
+  .hero-btns{display:flex;gap:1rem;}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.4rem;border-radius:8px;font-size:.85rem;font-weight:600;text-decoration:none;transition:all .2s;}
+  .btn-primary{background:var(--accent2);color:#fff;}
+  .btn-primary:hover{background:var(--accent);transform:translateY(-2px);}
+  .btn-outline{border:1px solid var(--accent2);color:var(--accent);}
+  .btn-outline:hover{background:rgba(0,119,182,.15);transform:translateY(-2px);}
+
+  /* SECTIONS */
+  section{padding:80px 8%;}
+  .sec-label{font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;}
+  .sec-title{font-size:2rem;font-weight:800;margin-bottom:.5rem;}
+  .sec-line{width:50px;height:3px;background:var(--accent2);border-radius:2px;margin-bottom:2.5rem;}
+
+  /* RESEARCH */
+  #research{background:var(--deep);}
+  .research-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.2rem;}
+  .research-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;transition:all .3s;position:relative;overflow:hidden;}
+  .research-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent));transform:scaleX(0);transform-origin:left;transition:.3s;}
+  .research-card:hover{border-color:var(--accent2);transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,119,182,.15);}
+  .research-card:hover::before{transform:scaleX(1);}
+  .r-icon{font-size:2rem;margin-bottom:.8rem;}
+  .r-title{font-size:.95rem;font-weight:700;margin-bottom:.4rem;}
+  .r-desc{font-size:.8rem;color:var(--gray);line-height:1.5;}
+
+  /* PUBLICATIONS */
+  #publications{background:var(--navy);}
+  .pub-filter{display:flex;gap:.6rem;margin-bottom:2rem;flex-wrap:wrap;}
+  .filt-btn{padding:.4rem 1rem;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--gray);font-size:.8rem;cursor:pointer;transition:.2s;}
+  .filt-btn.active,.filt-btn:hover{background:var(--accent2);color:#fff;border-color:var(--accent2);}
+  .pub-list{display:flex;flex-direction:column;gap:1rem;}
+  .pub-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;transition:.2s;display:none;}
+  .pub-item.show{display:block;}
+  .pub-item:hover{border-color:var(--accent2);}
+  .pub-year{font-size:.72rem;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:.3rem;}
+  .pub-title{font-size:.92rem;font-weight:600;margin-bottom:.4rem;line-height:1.4;}
+  .pub-authors{font-size:.78rem;color:var(--gray);margin-bottom:.3rem;}
+  .pub-authors strong{color:var(--accent);}
+  .pub-journal{font-size:.78rem;color:#7ba3c0;font-style:italic;}
+  .pub-link{display:inline-flex;align-items:center;gap:.3rem;margin-top:.6rem;font-size:.75rem;color:var(--accent);text-decoration:none;font-weight:600;}
+  .pub-link:hover{color:#fff;}
+  .scholar-btn{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.5rem;background:rgba(0,119,182,.15);border:1px solid var(--accent2);color:var(--accent);padding:.7rem 1.5rem;border-radius:8px;font-size:.85rem;font-weight:600;text-decoration:none;transition:.2s;}
+  .scholar-btn:hover{background:var(--accent2);color:#fff;}
+
+  /* CV */
+  #about{background:var(--deep);}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:3rem;}
+  .timeline{position:relative;padding-left:1.5rem;}
+  .timeline::before{content:'';position:absolute;left:0;top:4px;bottom:0;width:2px;background:var(--border);}
+  .tl-item{position:relative;margin-bottom:1.8rem;}
+  .tl-item::before{content:'';position:absolute;left:-1.6rem;top:4px;width:10px;height:10px;border-radius:50%;background:var(--accent2);border:2px solid var(--navy);}
+  .tl-year{font-size:.75rem;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:.2rem;}
+  .tl-title{font-size:.9rem;font-weight:600;margin-bottom:.15rem;}
+  .tl-sub{font-size:.8rem;color:var(--gray);}
+  .subsec-title{font-size:1.1rem;font-weight:700;color:var(--light);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+
+  /* PEOPLE */
+  #people{background:var(--navy);}
+  .people-section{margin-bottom:2.5rem;}
+  .people-section-title{font-size:.85rem;font-weight:700;color:var(--light);letter-spacing:1px;text-transform:uppercase;margin-bottom:1rem;padding-bottom:.4rem;border-bottom:1px solid var(--border);}
+  .people-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+  .person-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;transition:.2s;}
+  .person-card:hover{border-color:var(--accent2);transform:translateY(-2px);}
+  .person-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));margin-bottom:.7rem;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:#fff;}
+  .person-name{font-size:.9rem;font-weight:600;margin-bottom:.2rem;}
+  .person-period{font-size:.75rem;color:var(--accent);margin-bottom:.15rem;}
+  .person-degree{font-size:.75rem;color:var(--gray);margin-bottom:.15rem;}
+  .person-current{font-size:.75rem;color:#7ba3c0;}
+  /* PI card */
+  .pi-card{display:flex;align-items:center;gap:1.2rem;background:var(--card);border:1px solid var(--accent2);border-radius:14px;padding:1.4rem 1.8rem;margin-bottom:2rem;max-width:480px;}
+  .pi-avatar{width:60px;height:60px;border-radius:50%;overflow:hidden;flex-shrink:0;}
+  .pi-avatar img{width:100%;height:100%;object-fit:cover;object-position:top;}
+  .pi-info .pi-name{font-size:1.05rem;font-weight:700;margin-bottom:.2rem;}
+  .pi-info .pi-role{font-size:.8rem;color:var(--accent);font-weight:600;margin-bottom:.15rem;}
+  .pi-info .pi-dept{font-size:.78rem;color:var(--gray);}
+  /* alumni */
+  .alumni-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.8rem;}
+  .alumni-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;opacity:.85;transition:.2s;}
+  .alumni-card:hover{opacity:1;border-color:var(--border);}
+
+  /* TEACHING */
+  #teaching{background:var(--deep);}
+  .teaching-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+  .course-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;transition:.2s;}
+  .course-card:hover{border-color:var(--accent2);}
+  .course-sem{font-size:.72rem;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:.3rem;}
+  .course-name{font-size:.9rem;font-weight:600;}
+  .course-code{font-size:.75rem;color:var(--gray);margin-top:.2rem;}
+
+  /* CONTACT */
+  #contact{background:var(--navy);}
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;}
+  .contact-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;}
+  .contact-card .c-icon{font-size:1.8rem;margin-bottom:.6rem;}
+  .contact-card .c-label{font-size:.75rem;color:var(--gray);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:1px;}
+  .contact-card .c-val{font-size:.85rem;color:var(--light);word-break:break-all;}
+
+  /* FOOTER */
+  footer{background:#060f1e;padding:1.5rem 8%;text-align:center;color:var(--gray);font-size:.78rem;border-top:1px solid var(--border);}
+
+  @media(max-width:768px){
+    .hero-content{flex-direction:column;}
+    .hero-photo{width:160px;height:200px;}
+    .hero-text h1{font-size:2rem;}
+    .two-col{grid-template-columns:1fr;}
+    nav ul{gap:.8rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Medical Big<span> Data Lab</span></div>
+  <ul>
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#about">CV</a></li>
+    <li><a href="#people">People</a></li>
+    <li><a href="#teaching">Teaching</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="dna-grid"></div>
+  <div class="hero-content">
+    <div class="hero-photo" id="heroPhoto">
+      <div class="photo-fallback">JK</div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-tag">Medical Big Data Lab</div>
+      <h1>Joungyoun <span>Kim</span></h1>
+      <p class="position">Associate Professor</p>
+      <p class="dept">Department of Artificial Intelligence, University of Seoul</p>
+      <p class="hero-bio">My research combines AI technology with healthcare big data. I focus on developing machine learning models for predicting disease onset and statistical models based on Hidden Markov Random Fields and Bayesian MCMC algorithms. PhD in Statistics, UW–Madison (2008).</p>
+      <div class="hero-contacts">
+        <div class="contact-chip">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          Room 4-422, University of Seoul
+        </div>
+        <div class="contact-chip">
+          <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          02-6490-2477
+        </div>
+        <div class="contact-chip">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          joungyoun@uos.ac.kr
+        </div>
+      </div>
+      <div class="hero-btns">
+        <a href="https://scholar.google.com/citations?hl=en&user=W7W7_dIAAAAJ" target="_blank" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/></svg>
+          Google Scholar
+        </a>
+        <a href="https://sites.google.com/view/joungyoun/cv" target="_blank" class="btn btn-outline">📄 View CV</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <p class="sec-label">What We Do</p>
+  <h2 class="sec-title">Research Interests</h2>
+  <div class="sec-line"></div>
+  <div class="research-grid">
+    <div class="research-card"><div class="r-icon">🧬</div><div class="r-title">AI & Healthcare Big Data</div><div class="r-desc">Developing AI technologies utilizing large-scale medical big data from national health insurance databases.</div></div>
+    <div class="research-card"><div class="r-icon">📊</div><div class="r-title">Disease Prediction Models</div><div class="r-desc">Building machine learning models to predict the onset of chronic diseases including diabetes, stroke, and cancer.</div></div>
+    <div class="research-card"><div class="r-icon">🔬</div><div class="r-title">Hidden Markov Random Field</div><div class="r-desc">Statistical modeling using HMRF and Bayesian MCMC algorithms for spatial and temporal health data.</div></div>
+    <div class="research-card"><div class="r-icon">💡</div><div class="r-title">Multiple Testing</div><div class="r-desc">Semiparametric methods for large-scale simultaneous hypothesis testing under dependency structures.</div></div>
+    <div class="research-card"><div class="r-icon">🏥</div><div class="r-title">Epidemiology & Biostatistics</div><div class="r-desc">Risk factors and outcomes for cardiovascular disease, metabolic syndrome, and population health.</div></div>
+    <div class="research-card"><div class="r-icon">🤖</div><div class="r-title">Machine Learning Methods</div><div class="r-desc">Survival models, propensity score methods, and deep learning applications for clinical data.</div></div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section id="publications">
+  <p class="sec-label">Research Output</p>
+  <h2 class="sec-title">Publications</h2>
+  <div class="sec-line"></div>
+  <div class="pub-filter">
+    <button class="filt-btn active" onclick="filterPubs('all',this)">All</button>
+    <button class="filt-btn" onclick="filterPubs('2024',this)">2024–2025</button>
+    <button class="filt-btn" onclick="filterPubs('2022',this)">2022–2023</button>
+    <button class="filt-btn" onclick="filterPubs('older',this)">2021 &amp; Earlier</button>
+  </div>
+  <div class="pub-list">
+    <div class="pub-item show" data-year="2024">
+      <div class="pub-year">2025</div>
+      <div class="pub-title">Association between changes in systolic blood pressure and the incidence of diabetes mellitus: a retrospective study based on the Korean National Health Screening Cohort</div>
+      <div class="pub-authors">You H-S, Kim J-S, <strong>Kim J*</strong>, Kang H-T*</div>
+      <div class="pub-journal">Korean Journal of Family Medicine, 2025</div>
+      <a class="pub-link" href="https://doi.org/10.4082/kjfm.25.0101" target="_blank">↗ DOI Link</a>
+    </div>
+    <div class="pub-item show" data-year="2024">
+      <div class="pub-year">2024</div>
+      <div class="pub-title">A 5-Year Mortality Prediction Model for Prostate Cancer Patients Based on the Korean Nationwide Health Insurance Claims Database</div>
+      <div class="pub-authors"><strong>Kim J</strong>, Kim Y-H, Kim Y-J, Kang H-T</div>
+      <div class="pub-journal">Journal of Personalized Medicine, 14(10): 1058</div>
+      <a class="pub-link" href="https://doi.org/10.3390/jpm14101058" target="_blank">↗ DOI Link</a>
+    </div>
+    <div class="pub-item show" data-year="2022">
+      <div class="pub-year">2024</div>
+      <div class="pub-title">Semi-parametric hidden Markov model for large-scale multiple testing under dependency</div>
+      <div class="pub-authors"><strong>Kim J</strong>, Lim J, Lee JS</div>
+      <div class="pub-journal">Statistical Modelling, 24(4)</div>
+      <a class="pub-link" href="https://doi.org/10.1177/1471082X221121235" target="_blank">↗ DOI Link</a>
+    </div>
+    <div class="pub-item show" data-year="2022">
+      <div class="pub-year">2023</div>
+      <div class="pub-title">Association between polycythemia and risk of ischemic stroke in males based on the National Health Insurance Service-Health Screening Cohort</div>
+      <div class="pub-authors">You H-S, Shin S-J, <strong>Kim J*</strong>, Kang H-T*</div>
+      <div class="pub-journal">Expert Review of Hematology, 16(7): 553–559</div>
+      <a class="pub-link" href="https://doi.org/10.1080/17474086.2023.2218610" target="_blank">↗ DOI Link</a>
+    </div>
+    <div class="pub-item show" data-year="2022">
+      <div class="pub-year">2023</div>
+      <div class="pub-title">Effect of metabolic health and obesity on all-cause death and CVD incidence in Korean adults: a retrospective cohort study</div>
+      <div class="pub-authors">Kim Y-S, Shin S-J, <strong>Kim J</strong>, Kang H-T</div>
+      <div class="pub-journal">Scientific Reports</div>
+      <a class="pub-link" href="https://www.nature.com/articles/s41598-023-29688-5" target="_blank">↗ Nature Link</a>
+    </div>
+    <div class="pub-item show" data-year="older">
+      <div class="pub-year">2018</div>
+      <div class="pub-title">A peeling algorithm for multiple testing on a random field</div>
+      <div class="pub-authors"><strong>Kim J</strong>, Yu D, Lim J, Won J-H</div>
+      <div class="pub-journal">Computational Statistics, 33(1): 503–525</div>
+    </div>
+  </div>
+  <a class="scholar-btn" href="https://scholar.google.com/citations?hl=en&user=W7W7_dIAAAAJ" target="_blank">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/></svg>
+    View Full Publication List on Google Scholar
+  </a>
+</section>
+
+<!-- CV -->
+<section id="about">
+  <p class="sec-label">Background</p>
+  <h2 class="sec-title">Education & Career</h2>
+  <div class="sec-line"></div>
+  <div class="two-col">
+    <div>
+      <p class="subsec-title">🎓 Education</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-year">2008</div><div class="tl-title">Ph.D. in Statistics</div><div class="tl-sub">University of Wisconsin–Madison<br>Advisor: Bret R. Larget</div></div>
+        <div class="tl-item"><div class="tl-year">2005</div><div class="tl-title">M.S. in Statistics</div><div class="tl-sub">University of Wisconsin–Madison</div></div>
+        <div class="tl-item"><div class="tl-year">2001</div><div class="tl-title">B.S. in Statistics</div><div class="tl-sub">Seoul National University</div></div>
+      </div>
+    </div>
+    <div>
+      <p class="subsec-title">💼 Positions</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-year">2022.08 – Present</div><div class="tl-title">Associate Professor</div><div class="tl-sub">Dept. of AI, University of Seoul</div></div>
+        <div class="tl-item"><div class="tl-year">2021.03 – 2022.08</div><div class="tl-title">Assistant Professor</div><div class="tl-sub">College of Nursing, Yonsei University</div></div>
+        <div class="tl-item"><div class="tl-year">2016.03 – 2021.02</div><div class="tl-title">Assistant &amp; Associate Professor</div><div class="tl-sub">Dept. of Information &amp; Statistics, Chungbuk National University</div></div>
+        <div class="tl-item"><div class="tl-year">2014.03 – 2016.02</div><div class="tl-title">Researcher</div><div class="tl-sub">Biomedical Statistics Center, Samsung Medical Center</div></div>
+        <div class="tl-item"><div class="tl-year">2010.06 – 2013.11</div><div class="tl-title">Researcher</div><div class="tl-sub">Cancer Research Institute, Seoul National University</div></div>
+        <div class="tl-item"><div class="tl-year">2008.09 – 2009.07</div><div class="tl-title">Researcher</div><div class="tl-sub">Nutrition &amp; Genomics Team, Jean Mayer USDA HNRCA</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PEOPLE -->
+<section id="people">
+  <p class="sec-label">Lab Members</p>
+  <h2 class="sec-title">People</h2>
+  <div class="sec-line"></div>
+
+  <!-- PI -->
+  <div class="pi-card">
+    <div class="pi-avatar" id="piAvatar"><div style="width:100%;height:100%;background:linear-gradient(135deg,#0077b6,#00b4d8);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:rgba(255,255,255,.5)">JK</div></div>
+    <div class="pi-info">
+      <div class="pi-name">Joungyoun Kim (김정연)</div>
+      <div class="pi-role">Principal Investigator</div>
+      <div class="pi-dept">Associate Professor, Dept. of Artificial Intelligence, University of Seoul</div>
+    </div>
+  </div>
+
+  <!-- Current Members — add cards here as lab grows -->
+  <div class="people-section">
+    <div class="people-section-title">Current Members</div>
+    <div class="people-grid" id="currentMembers">
+      <!-- Example structure for future members:
+      <div class="person-card">
+        <div class="person-avatar">홍길</div>
+        <div class="person-name">홍길동</div>
+        <div class="person-period">2024.03 – present</div>
+        <div class="person-degree">M.S. student</div>
+      </div>
+      -->
+      <div style="color:var(--gray);font-size:.85rem;padding:.5rem 0;">
+        📢 Recruiting graduate students (M.S. / Ph.D.) — Contact <span style="color:var(--accent)">joungyoun@uos.ac.kr</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alumni -->
+  <div class="people-section">
+    <div class="people-section-title">Alumni</div>
+    <div class="alumni-grid">
+      <div class="alumni-card"><div class="person-name">신상준</div><div class="person-period">2020.09 – 2022.08</div><div class="person-degree">M.S.</div></div>
+      <div class="alumni-card"><div class="person-name">김형섭</div><div class="person-period">2019.03 – 2021.02</div><div class="person-degree">M.S.</div><div class="person-current">→ 메디톡스</div></div>
+      <div class="alumni-card"><div class="person-name">배윤종</div><div class="person-period">2019.03 – 2021.02</div><div class="person-degree">M.S.</div><div class="person-current">→ 한미약품</div></div>
+      <div class="alumni-card"><div class="person-name">최은아</div><div class="person-period">2018.03 – 2020.02</div><div class="person-degree">M.S.</div><div class="person-current">→ 질병관리청</div></div>
+      <div class="alumni-card"><div class="person-name">한예은</div><div class="person-period">2018.03 – 2020.02</div><div class="person-degree">M.S.</div><div class="person-current">→ 질병관리청</div></div>
+      <div class="alumni-card"><div class="person-name">유나영</div><div class="person-period">2017.03 – 2019.06</div><div class="person-degree">M.S.</div><div class="person-current">→ 한국소비자원</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEACHING -->
+<section id="teaching">
+  <p class="sec-label">Courses</p>
+  <h2 class="sec-title">Teaching</h2>
+  <div class="sec-line"></div>
+  <div class="teaching-grid">
+    <div class="course-card"><div class="course-sem">Undergraduate</div><div class="course-name">Introduction to Artificial Intelligence</div><div class="course-code">Dept. of AI, University of Seoul</div></div>
+    <div class="course-card"><div class="course-sem">Undergraduate / Graduate</div><div class="course-name">Statistical Machine Learning</div><div class="course-code">Dept. of AI, University of Seoul</div></div>
+    <div class="course-card"><div class="course-sem">Graduate</div><div class="course-name">Healthcare Big Data Analysis</div><div class="course-code">Dept. of AI, University of Seoul</div></div>
+    <div class="course-card"><div class="course-sem">Graduate</div><div class="course-name">Bayesian Statistics</div><div class="course-code">Dept. of AI, University of Seoul</div></div>
+  </div>
+  <p style="margin-top:1rem;color:var(--gray);font-size:.82rem;">* Please visit the <a href="https://sites.google.com/view/joungyoun/teaching" target="_blank" style="color:var(--accent)">original teaching page</a> for the latest course information.</p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="sec-label">Get in Touch</p>
+  <h2 class="sec-title">Contact</h2>
+  <div class="sec-line"></div>
+  <div class="contact-grid">
+    <div class="contact-card"><div class="c-icon">🏢</div><div class="c-label">Office</div><div class="c-val">Room 4-422<br>161 Seoulsiripodae-ro, Dongdaemun-gu<br>Seoul 02504, Korea</div></div>
+    <div class="contact-card"><div class="c-icon">📧</div><div class="c-label">Email</div><div class="c-val">joungyoun@uos.ac.kr</div></div>
+    <div class="contact-card"><div class="c-icon">📞</div><div class="c-label">Phone</div><div class="c-val">+82-2-6490-2477</div></div>
+    <div class="contact-card"><div class="c-icon">🔬</div><div class="c-label">Google Scholar</div><div class="c-val"><a href="https://scholar.google.com/citations?hl=en&user=W7W7_dIAAAAJ" target="_blank" style="color:var(--accent)">View Profile →</a></div></div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Medical Big Data Lab · Joungyoun Kim · Department of Artificial Intelligence, University of Seoul</p>
+</footer>
+
+<script>
+  // Hero photo — try to load the Google Sites image, fall back to initials
+  (function(){
+    var img = new Image();
+    img.onload = function(){
+      var el = document.getElementById('heroPhoto');
+      if(!el) return;
+      el.innerHTML = '';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:top center;';
+      el.appendChild(img);
+    };
+    img.src = 'profile.jpg';
+  })();
+
+  // PI avatar same image
+  (function(){
+    var img = new Image();
+    img.onload = function(){
+      var el = document.getElementById('piAvatar');
+      if(!el) return;
+      el.innerHTML = '';
+      el.style.cssText = 'width:60px;height:60px;border-radius:50%;overflow:hidden;flex-shrink:0;';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:top center;';
+      el.appendChild(img);
+    };
+    img.src = 'https://lh3.googleusercontent.com/sitesv/APaQ0SS_2xqSZ-9XgzMYI7trhQ8su2MphC2_0APq5A6pFU4hZIJT4RJONIO2d_I7s5eaUk-tSVLGLEXGQXwrl0l17MxHeDOGaydSy-bwDSo46F0O0zqg9sDJekfioyQw0RAKcgHY7Yx1GuMwuUgViz4YGi6Mp8wv4kYr1iJFf83Af92vM668SWGGzQlIC_JwhHGyTu7cLH_LCfJ37Llp3l-mfFPNvkBOZlZlf2q6=w1280';
+  })();
+
+  // Nav active on scroll
+  var sections = document.querySelectorAll('section[id]');
+  var navLinks = document.querySelectorAll('nav ul li a');
+  window.addEventListener('scroll', function(){
+    var cur = '';
+    sections.forEach(function(s){ if(window.scrollY >= s.offsetTop - 80) cur = s.id; });
+    navLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === '#'+cur); });
+  });
+
+  // Publication filter
+  function filterPubs(year, btn){
+    document.querySelectorAll('.filt-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll('.pub-item').forEach(function(p){
+      if(year === 'all'){ p.classList.add('show'); return; }
+      p.classList.toggle('show', p.dataset.year === year);
+    });
+  }
+</script>
+</body>
+</html>
